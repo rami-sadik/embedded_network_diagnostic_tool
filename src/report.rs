@@ -12,7 +12,12 @@ pub fn create_report_header() -> String {
     report
 }
 
-pub fn add_server_report(report: &mut String, server: &Server, results: &[ScanResult]) {
+pub fn add_server_report(
+    report: &mut String,
+    server: &Server,
+    results: &[ScanResult],
+    total_duration_ms: u64,
+) {
     report.push_str(&format!("Server: {}\n", server.name));
     report.push_str(&format!("Adresse: {}\n", server.address));
     report.push_str(&format!("Protokoll: {}\n", server.protocol));
@@ -34,6 +39,8 @@ pub fn add_server_report(report: &mut String, server: &Server, results: &[ScanRe
             result.port, status_text, response_time
         ));
     }
+
+    report.push_str(&format!("\nScan-Dauer gesamt: {} ms\n", total_duration_ms));
 
     add_summary_to_report(report, results);
 
@@ -119,12 +126,13 @@ mod tests {
 
         let mut report = create_report_header();
 
-        add_server_report(&mut report, &server, &results);
+        add_server_report(&mut report, &server, &results, 7);
 
         assert!(report.contains("Test Server"));
         assert!(report.contains("127.0.0.1"));
         assert!(report.contains("8080"));
         assert!(report.contains("OPEN"));
         assert!(report.contains("5 ms"));
+        assert!(report.contains("Scan-Dauer gesamt: 7 ms"));
     }
 }

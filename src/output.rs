@@ -13,7 +13,7 @@ pub fn print_header() {
     println!("====================================\n");
 }
 
-pub fn print_server_dashboard(server: &Server, results: &[ScanResult]) {
+pub fn print_server_dashboard(server: &Server, results: &[ScanResult], total_duration_ms: u64) {
     print_server_info(server);
 
     println!("{:<10}{:<22}Zeit", "Port", "Status");
@@ -31,6 +31,8 @@ pub fn print_server_dashboard(server: &Server, results: &[ScanResult]) {
 
         println!("{:<10}{}{}", result.port, colored_status, response_time);
     }
+
+    println!("\nScan-Dauer gesamt: {} ms", total_duration_ms);
 
     print_summary(results);
 

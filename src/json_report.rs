@@ -16,6 +16,7 @@ struct JsonServerReport {
     address: String,
     protocol: String,
     timeout_ms: u64,
+    total_duration_ms: Option<u64>,
     message: Option<String>,
     results: Vec<ScanResult>,
 }
@@ -27,12 +28,18 @@ pub fn create_json_report() -> JsonReport {
     }
 }
 
-pub fn add_server_json_report(report: &mut JsonReport, server: &Server, results: Vec<ScanResult>) {
+pub fn add_server_json_report(
+    report: &mut JsonReport,
+    server: &Server,
+    results: Vec<ScanResult>,
+    total_duration_ms: u64,
+) {
     let server_report = JsonServerReport {
         name: server.name.clone(),
         address: server.address.clone(),
         protocol: server.protocol.clone(),
         timeout_ms: server.timeout_ms,
+        total_duration_ms: Some(total_duration_ms),
         message: None,
         results,
     };
@@ -46,6 +53,7 @@ pub fn add_unsupported_protocol_json_report(report: &mut JsonReport, server: &Se
         address: server.address.clone(),
         protocol: server.protocol.clone(),
         timeout_ms: server.timeout_ms,
+        total_duration_ms: None,
         message: Some(String::from("Protocol is currently not supported")),
         results: Vec::new(),
     };
@@ -63,7 +71,8 @@ pub fn save_json_report(path: &str, report: &JsonReport) -> Result<(), Box<dyn E
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::scanner::PortStatus;
+    use crate::config::Server;
+    use crate::scanner::{PortStatus, ScanResult};
 
     #[test]
     fn json_report_should_contain_server_result() {
@@ -82,7 +91,7 @@ mod tests {
         }];
 
         let mut report = create_json_report();
-        add_server_json_report(&mut report, &server, results);
+        add_server_json_report(&mut report, &server, results, 7);
 
         let json = serde_json::to_string_pretty(&report).unwrap();
 
@@ -90,5 +99,7 @@ mod tests {
         assert!(json.contains("127.0.0.1"));
         assert!(json.contains("8080"));
         assert!(json.contains("OPEN"));
+        assert!(json.contains("total_duration_ms"));
+        assert!(json.contains("7"));
     }
 }

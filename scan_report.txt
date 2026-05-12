@@ -11,7 +11,9 @@ Port      Status                Zeit
 22        CLOSED                0 ms
 443       CLOSED                0 ms
 8080      CLOSED                0 ms
-9000      CLOSED                0 ms
+9000      CLOSED                1 ms
+
+Scan-Dauer gesamt: 1 ms
 
 Zusammenfassung:
 OPEN: 0
@@ -34,6 +36,8 @@ Port      Status                Zeit
 443       CLOSED                0 ms
 8080      CLOSED                0 ms
 9000      CLOSED                0 ms
+
+Scan-Dauer gesamt: 0 ms
 
 Zusammenfassung:
 OPEN: 0

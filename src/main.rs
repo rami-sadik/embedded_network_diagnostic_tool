@@ -14,6 +14,7 @@ use report::{
     add_server_report, add_unsupported_protocol_report, create_report_header, save_report,
 };
 use scanner::scan_server;
+use std::time::Instant;
 
 fn main() {
     print_header();
@@ -33,11 +34,23 @@ fn main() {
     for server in &config.servers {
         match server.protocol.as_str() {
             "tcp" => {
+                let scan_start = Instant::now();
                 let results = scan_server(server);
+                let total_duration_ms = scan_start.elapsed().as_millis() as u64;
 
-                print_server_dashboard(server, &results);
-                add_server_report(&mut text_report_content, server, &results);
-                add_server_json_report(&mut json_report_content, server, results.clone());
+                print_server_dashboard(server, &results, total_duration_ms);
+                add_server_report(
+                    &mut text_report_content,
+                    server,
+                    &results,
+                    total_duration_ms,
+                );
+                add_server_json_report(
+                    &mut json_report_content,
+                    server,
+                    results.clone(),
+                    total_duration_ms,
+                );
             }
             _ => {
                 print_unsupported_protocol(server);

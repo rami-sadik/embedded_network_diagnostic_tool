@@ -1,18 +1,18 @@
 {
   "servers": [
     {
+      "name": "Ubuntu VM Test",
+      "address": "192.168.182.129",
+      "protocol": "tcp",
+      "timeout_ms": 1000,
+      "ports": [9000, 8080, 22, 443]
+    },
+    {
       "name": "Local Test Server",
       "address": "127.0.0.1",
       "protocol": "tcp",
       "timeout_ms": 1000,
-      "ports": [8080, 22, 443]
-    },
-    {
-      "name": "Router Test",
-      "address": "192.168.182.2",
-      "protocol": "tcp",
-      "timeout_ms": 1000,
-      "ports": [80, 443]
+      "ports": [8080, 9000, 22, 443]
     }
   ]
 }

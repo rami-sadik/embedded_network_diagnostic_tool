@@ -195,3 +195,66 @@ Das Projekt unterstützt aktuell:
 - Unit-Tests
 - Git-Versionierung
 
+
+## Erweiterungen: Fehlerklassifikation, Parallelisierung und Scan-Dauer
+
+### Bessere Fehlerklassifikation
+
+Das Tool unterscheidet inzwischen mehrere Statuswerte:
+
+- OPEN
+- CLOSED
+- TIMEOUT
+- NETWORK_UNREACHABLE
+- HOST_UNREACHABLE
+- DNS_ERROR
+- PERMISSION_DENIED
+- ERROR
+
+Dadurch ist die Diagnose genauer als bei einer einfachen Offen/Geschlossen-Prüfung.
+
+### Parallele TCP-Port-Scans
+
+Die Ports eines Servers werden parallel geprüft.  
+Dafür wird in Rust `std::thread::spawn` verwendet.
+
+Vorteil:
+
+Wenn mehrere Ports in einen Timeout laufen, muss das Programm nicht jeden Timeout nacheinander abwarten.  
+Dadurch wird der gesamte Scan schneller.
+
+Beispiel:
+
+Ohne Parallelisierung:
+
+4 Timeout-Ports mit jeweils 1000 ms Timeout dauern ungefähr 4000 ms.
+
+Mit Parallelisierung:
+
+4 Timeout-Ports mit jeweils 1000 ms Timeout dauern ungefähr 1000 ms.
+
+### Gesamt-Scan-Dauer pro Server
+
+Zusätzlich zur Antwortzeit pro Port misst das Programm auch die Gesamtdauer des Scans pro Server.
+
+Diese Gesamtzeit wird angezeigt in:
+
+- Terminalausgabe
+- scan_report.txt
+- scan_report.json
+
+Dadurch kann man gut erkennen, welchen Vorteil die parallele Scanlogik bringt.
+
+## Aktuelle Rust-Konzepte im Projekt
+
+Zusätzlich zu den bisherigen Rust-Konzepten werden jetzt auch verwendet:
+
+- std::thread
+- thread::spawn
+- move-Closure
+- JoinHandle
+- join()
+- clone()
+- sort_by_key()
+- Zeitmessung mit Instant
+

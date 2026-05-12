@@ -308,3 +308,75 @@ Der Server lauscht standardmäßig auf:
 
 Wenn der UDP-Echo-Server läuft, sollte das Rust-Tool für Port 9001 den Status OPEN anzeigen.
 
+
+## CSV-Export
+
+Zusätzlich zu TXT- und JSON-Reports erzeugt das Tool auch einen CSV-Report:
+
+scan_report.csv
+
+Der CSV-Report kann in Tabellenprogrammen wie Excel oder LibreOffice Calc geöffnet werden.
+
+Jede Zeile enthält:
+
+- server_name
+- address
+- protocol
+- port
+- status
+- response_time_ms
+- total_duration_ms
+- message
+
+Beispiel:
+
+server_name,address,protocol,port,status,response_time_ms,total_duration_ms,message
+Local TCP Test Server,127.0.0.1,tcp,8080,OPEN,0,10,
+
+## Kommandozeilenargumente
+
+Das Tool unterstützt einfache Kommandozeilenargumente.
+
+Standardstart:
+
+cargo run
+
+Dabei wird automatisch config.json geladen.
+
+Eine bestimmte Konfigurationsdatei kann so angegeben werden:
+
+cargo run -- --config config.json
+
+Oder zum Beispiel:
+
+cargo run -- --config test_config.json
+
+Hilfe anzeigen:
+
+cargo run -- --help
+
+Wichtig:
+
+Das erste -- gehört zu Cargo.  
+Alles danach wird an das eigene Rust-Programm weitergegeben.
+
+Beispiel:
+
+cargo run -- --config config.json
+
+Bedeutung:
+
+Cargo startet das Programm und übergibt dem Rust-Programm die Argumente --config config.json.
+
+## Neue Rust-Konzepte durch CLI und CSV
+
+Durch diese Erweiterungen werden zusätzlich verwendet:
+
+- std::env::args
+- eigene CLI-Struktur mit CliAction
+- Argument-Parsing
+- Tests für Kommandozeilenargumente
+- CSV-Erzeugung als String
+- Escape-Funktion für CSV-Werte
+- zusätzlicher Report-Typ für Tabellenprogramme
+

@@ -248,3 +248,70 @@ Neue Rust-Konzepte durch UDP:
 - ErrorKind
 - Unterschied zwischen TCP und UDP in der Implementierung
 
+
+## 14. CSV-Export
+
+Das Tool erzeugt jetzt zusätzlich einen CSV-Report:
+
+scan_report.csv
+
+Damit können die Ergebnisse in Tabellenprogrammen wie Excel oder LibreOffice Calc ausgewertet werden.
+
+Der CSV-Report enthält pro Port eine Zeile mit:
+
+- Servername
+- Adresse
+- Protokoll
+- Port
+- Status
+- Antwortzeit
+- Gesamt-Scan-Dauer
+- optionale Nachricht
+
+Dadurch gibt es jetzt drei Ausgabeformate:
+
+- TXT für Menschen
+- JSON für Programme oder Web-Dashboards
+- CSV für Tabellen und Auswertung
+
+## 15. Kommandozeilenargumente
+
+Das Tool unterstützt jetzt einfache Kommandozeilenargumente.
+
+Standardmäßig wird config.json geladen:
+
+cargo run
+
+Mit --config kann eine andere Konfigurationsdatei angegeben werden:
+
+cargo run -- --config config.json
+
+oder:
+
+cargo run -- --config test_config.json
+
+Mit --help kann eine Hilfe angezeigt werden:
+
+cargo run -- --help
+
+Wichtig:
+
+Bei cargo run trennt das erste -- die Cargo-Argumente von den Programmargumenten.
+
+Beispiel:
+
+cargo run -- --config config.json
+
+Das bedeutet:
+
+Cargo startet das Programm.  
+Das eigene Rust-Programm bekommt --config config.json als Argumente.
+
+Neue Rust-Konzepte durch CLI:
+
+- std::env::args
+- enum CliAction
+- Argument-Parsing
+- Result für fehlerhafte Argumente
+- Unit-Tests für CLI-Parsing
+

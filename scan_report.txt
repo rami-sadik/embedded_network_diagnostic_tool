@@ -1,0 +1,36 @@
+Embedded Network Monitoring Report
+==================================
+
+Server: Local Test Server
+Adresse: 127.0.0.1
+Protokoll: tcp
+Timeout: 1000 ms
+
+Port      Status      Zeit
+------------------------------
+8080      CLOSED      0 ms
+22        CLOSED      0 ms
+443       CLOSED      0 ms
+
+Zusammenfassung:
+OPEN: 0
+CLOSED: 3
+TIMEOUT: 0
+ERROR: 0
+
+Server: Router Test
+Adresse: 192.168.182.2
+Protokoll: tcp
+Timeout: 1000 ms
+
+Port      Status      Zeit
+------------------------------
+80        CLOSED      0 ms
+443       CLOSED      0 ms
+
+Zusammenfassung:
+OPEN: 0
+CLOSED: 2
+TIMEOUT: 0
+ERROR: 0
+

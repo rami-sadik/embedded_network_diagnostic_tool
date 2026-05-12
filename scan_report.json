@@ -9,7 +9,12 @@
       "message": null,
       "results": [
         {
-          "port": 9000,
+          "port": 22,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 443,
           "status": "CLOSED",
           "response_time_ms": 0
         },
@@ -19,12 +24,7 @@
           "response_time_ms": 0
         },
         {
-          "port": 22,
-          "status": "CLOSED",
-          "response_time_ms": 0
-        },
-        {
-          "port": 443,
+          "port": 9000,
           "status": "CLOSED",
           "response_time_ms": 0
         }
@@ -38,22 +38,22 @@
       "message": null,
       "results": [
         {
-          "port": 8080,
-          "status": "CLOSED",
-          "response_time_ms": 0
-        },
-        {
-          "port": 9000,
-          "status": "CLOSED",
-          "response_time_ms": 0
-        },
-        {
           "port": 22,
           "status": "CLOSED",
           "response_time_ms": 0
         },
         {
           "port": 443,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 8080,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 9000,
           "status": "CLOSED",
           "response_time_ms": 0
         }

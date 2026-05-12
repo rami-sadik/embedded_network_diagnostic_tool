@@ -2,6 +2,7 @@ use crate::config::Server;
 use serde::Serialize;
 use std::fmt;
 use std::net::{TcpStream, ToSocketAddrs};
+use std::thread;
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Serialize, Clone, Copy)]
@@ -54,12 +55,32 @@ pub struct ScanResult {
 }
 
 pub fn scan_server(server: &Server) -> Vec<ScanResult> {
-    let mut results = Vec::new();
+    let mut handles = Vec::new();
 
     for port in &server.ports {
-        let result = scan_tcp_port(&server.address, *port, server.timeout_ms);
-        results.push(result);
+        let address = server.address.clone();
+        let timeout_ms = server.timeout_ms;
+        let port = *port;
+
+        let handle = thread::spawn(move || scan_tcp_port(&address, port, timeout_ms));
+
+        handles.push((port, handle));
     }
+
+    let mut results = Vec::new();
+
+    for (port, handle) in handles {
+        match handle.join() {
+            Ok(result) => results.push(result),
+            Err(_) => results.push(ScanResult {
+                port,
+                status: PortStatus::Error,
+                response_time_ms: None,
+            }),
+        }
+    }
+
+    results.sort_by_key(|result| result.port);
 
     results
 }

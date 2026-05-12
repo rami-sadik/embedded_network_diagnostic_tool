@@ -8,10 +8,10 @@ Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-9000      CLOSED                0 ms
-8080      CLOSED                0 ms
 22        CLOSED                0 ms
 443       CLOSED                0 ms
+8080      CLOSED                0 ms
+9000      CLOSED                0 ms
 
 Zusammenfassung:
 OPEN: 0
@@ -30,10 +30,10 @@ Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-8080      CLOSED                0 ms
-9000      CLOSED                0 ms
 22        CLOSED                0 ms
 443       CLOSED                0 ms
+8080      CLOSED                0 ms
+9000      CLOSED                0 ms
 
 Zusammenfassung:
 OPEN: 0

@@ -1,7 +1,8 @@
 use crate::config::Server;
 use serde::Serialize;
 use std::fmt;
-use std::net::{TcpStream, ToSocketAddrs};
+use std::io::ErrorKind;
+use std::net::{TcpStream, ToSocketAddrs, UdpSocket};
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -54,7 +55,18 @@ pub struct ScanResult {
     pub response_time_ms: Option<u64>,
 }
 
-pub fn scan_server(server: &Server) -> Vec<ScanResult> {
+pub fn scan_tcp_server(server: &Server) -> Vec<ScanResult> {
+    scan_server_with(server, scan_tcp_port)
+}
+
+pub fn scan_udp_server(server: &Server) -> Vec<ScanResult> {
+    scan_server_with(server, scan_udp_port)
+}
+
+fn scan_server_with(
+    server: &Server,
+    scan_function: fn(&str, u16, u64) -> ScanResult,
+) -> Vec<ScanResult> {
     let mut handles = Vec::new();
 
     for port in &server.ports {
@@ -62,7 +74,7 @@ pub fn scan_server(server: &Server) -> Vec<ScanResult> {
         let timeout_ms = server.timeout_ms;
         let port = *port;
 
-        let handle = thread::spawn(move || scan_tcp_port(&address, port, timeout_ms));
+        let handle = thread::spawn(move || scan_function(&address, port, timeout_ms));
 
         handles.push((port, handle));
     }
@@ -116,22 +128,104 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
             status: PortStatus::Open,
             response_time_ms: Some(start_time.elapsed().as_millis() as u64),
         },
-        Err(error) => {
-            let status = match error.kind() {
-                std::io::ErrorKind::ConnectionRefused => PortStatus::Closed,
-                std::io::ErrorKind::TimedOut => PortStatus::Timeout,
-                std::io::ErrorKind::NetworkUnreachable => PortStatus::NetworkUnreachable,
-                std::io::ErrorKind::HostUnreachable => PortStatus::HostUnreachable,
-                std::io::ErrorKind::PermissionDenied => PortStatus::PermissionDenied,
-                _ => PortStatus::Error,
-            };
+        Err(error) => ScanResult {
+            port,
+            status: classify_io_error(error.kind()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        },
+    }
+}
 
-            ScanResult {
-                port,
-                status,
-                response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+fn scan_udp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
+    let target = format!("{}:{}", address, port);
+    let timeout = Duration::from_millis(timeout_ms);
+    let start_time = Instant::now();
+
+    let socket_address = match target.to_socket_addrs() {
+        Ok(mut addresses) => match addresses.next() {
+            Some(address) => address,
+            None => {
+                return ScanResult {
+                    port,
+                    status: PortStatus::DnsError,
+                    response_time_ms: None,
+                };
             }
+        },
+        Err(_) => {
+            return ScanResult {
+                port,
+                status: PortStatus::DnsError,
+                response_time_ms: None,
+            };
         }
+    };
+
+    let bind_address = if socket_address.is_ipv4() {
+        "0.0.0.0:0"
+    } else {
+        "[::]:0"
+    };
+
+    let socket = match UdpSocket::bind(bind_address) {
+        Ok(socket) => socket,
+        Err(error) => {
+            return ScanResult {
+                port,
+                status: classify_io_error(error.kind()),
+                response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+            };
+        }
+    };
+
+    if let Err(error) = socket.set_read_timeout(Some(timeout)) {
+        return ScanResult {
+            port,
+            status: classify_io_error(error.kind()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        };
+    }
+
+    if let Err(error) = socket.connect(socket_address) {
+        return ScanResult {
+            port,
+            status: classify_io_error(error.kind()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        };
+    }
+
+    if let Err(error) = socket.send(b"rust-network-diagnostic-ping") {
+        return ScanResult {
+            port,
+            status: classify_io_error(error.kind()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        };
+    }
+
+    let mut buffer = [0_u8; 1024];
+
+    match socket.recv(&mut buffer) {
+        Ok(_) => ScanResult {
+            port,
+            status: PortStatus::Open,
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        },
+        Err(error) => ScanResult {
+            port,
+            status: classify_io_error(error.kind()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
+        },
+    }
+}
+
+fn classify_io_error(error_kind: ErrorKind) -> PortStatus {
+    match error_kind {
+        ErrorKind::ConnectionRefused => PortStatus::Closed,
+        ErrorKind::TimedOut | ErrorKind::WouldBlock => PortStatus::Timeout,
+        ErrorKind::NetworkUnreachable => PortStatus::NetworkUnreachable,
+        ErrorKind::HostUnreachable => PortStatus::HostUnreachable,
+        ErrorKind::PermissionDenied => PortStatus::PermissionDenied,
+        _ => PortStatus::Error,
     }
 }
 

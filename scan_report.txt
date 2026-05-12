@@ -1,8 +1,8 @@
 Embedded Network Monitoring Report
 ==================================
 
-Server: Ubuntu VM Test
-Adresse: 192.168.182.129
+Server: Local TCP Test Server
+Adresse: 127.0.0.1
 Protokoll: tcp
 Timeout: 1000 ms
 
@@ -11,7 +11,7 @@ Port      Status                Zeit
 22        CLOSED                0 ms
 443       CLOSED                0 ms
 8080      CLOSED                0 ms
-9000      CLOSED                1 ms
+9000      CLOSED                0 ms
 
 Scan-Dauer gesamt: 1 ms
 
@@ -25,23 +25,21 @@ DNS_ERROR: 0
 PERMISSION_DENIED: 0
 ERROR: 0
 
-Server: Local Test Server
+Server: Local UDP Echo Server
 Adresse: 127.0.0.1
-Protokoll: tcp
+Protokoll: udp
 Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-22        CLOSED                0 ms
-443       CLOSED                0 ms
-8080      CLOSED                0 ms
-9000      CLOSED                0 ms
+9001      CLOSED                0 ms
+9002      CLOSED                0 ms
 
 Scan-Dauer gesamt: 0 ms
 
 Zusammenfassung:
 OPEN: 0
-CLOSED: 4
+CLOSED: 2
 TIMEOUT: 0
 NETWORK_UNREACHABLE: 0
 HOST_UNREACHABLE: 0

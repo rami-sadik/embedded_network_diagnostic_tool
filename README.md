@@ -121,3 +121,77 @@ Aktuell unterstützt das Projekt TCP-Portprüfungen. Das Protokollfeld ist vorbe
 - parallele Scans
 - Web-Dashboard
 - Logging
+
+## Neue Erweiterungen
+
+### TXT-Report
+
+Nach jedem Programmstart wird ein Textreport erzeugt:
+
+scan_report.txt
+
+Dieser Report ist für Menschen gut lesbar und enthält Serverinformationen, Portstatus, Antwortzeiten und eine Zusammenfassung.
+
+### JSON-Report
+
+Zusätzlich wird ein JSON-Report erzeugt:
+
+scan_report.json
+
+Dieser Report ist maschinenlesbar und kann später für weitere Tools, ein Web-Dashboard oder automatische Auswertung verwendet werden.
+
+Für den JSON-Report wird serde Serialize verwendet.
+
+### Farbige Terminalausgabe
+
+Die Statuswerte werden im Terminal farbig dargestellt:
+
+- OPEN: grün
+- CLOSED: rot
+- TIMEOUT: gelb
+- ERROR: magenta
+
+Die Farben werden mit ANSI-Escape-Codes umgesetzt. Dafür wird keine zusätzliche externe Bibliothek benötigt.
+
+## Aktuelle Befehle
+
+Programm starten:
+
+cargo run
+
+Tests ausführen:
+
+cargo test
+
+Code formatieren:
+
+cargo fmt
+
+Code prüfen:
+
+cargo clippy
+
+TXT-Report anzeigen:
+
+cat scan_report.txt
+
+JSON-Report anzeigen:
+
+cat scan_report.json
+
+## Aktueller Entwicklungsstand
+
+Das Projekt unterstützt aktuell:
+
+- JSON-Konfiguration
+- mehrere Server
+- mehrere TCP-Ports pro Server
+- Timeout pro Server
+- Antwortzeitmessung
+- Statusausgabe mit OPEN, CLOSED, TIMEOUT und ERROR
+- farbige Terminalausgabe
+- TXT-Report
+- JSON-Report
+- Unit-Tests
+- Git-Versionierung
+

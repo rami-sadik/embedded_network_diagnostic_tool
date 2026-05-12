@@ -13,7 +13,7 @@ Port      Status                Zeit
 8080      CLOSED                0 ms
 9000      CLOSED                0 ms
 
-Scan-Dauer gesamt: 1 ms
+Scan-Dauer gesamt: 0 ms
 
 Zusammenfassung:
 OPEN: 0

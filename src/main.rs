@@ -1,3 +1,4 @@
+mod cli;
 mod config;
 mod csv_report;
 mod json_report;
@@ -5,6 +6,7 @@ mod output;
 mod report;
 mod scanner;
 
+use cli::{CliAction, parse_args, print_help};
 use config::load_config;
 use csv_report::{
     add_server_csv_report, add_unsupported_protocol_csv_report, create_csv_report_header,
@@ -22,12 +24,32 @@ use scanner::{scan_tcp_server, scan_udp_server};
 use std::time::Instant;
 
 fn main() {
+    let action = match parse_args() {
+        Ok(action) => action,
+        Err(error) => {
+            println!("Fehler: {}", error);
+            println!();
+            print_help();
+            return;
+        }
+    };
+
+    let config_path = match action {
+        CliAction::Help => {
+            print_help();
+            return;
+        }
+        CliAction::Run { config_path } => config_path,
+    };
+
     print_header();
 
-    let config = match load_config("config.json") {
+    println!("Konfigurationsdatei: {}\n", config_path);
+
+    let config = match load_config(&config_path) {
         Ok(config) => config,
         Err(error) => {
-            println!("Fehler: config.json konnte nicht geladen werden.");
+            println!("Fehler: {} konnte nicht geladen werden.", config_path);
             println!("Details: {}", error);
             return;
         }

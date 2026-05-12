@@ -1,9 +1,11 @@
 use crate::config::Server;
+use serde::Serialize;
 use std::fmt;
 use std::net::{TcpStream, ToSocketAddrs};
 use std::time::{Duration, Instant};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Clone, Copy)]
+#[serde(rename_all = "UPPERCASE")]
 pub enum PortStatus {
     Open,
     Closed,
@@ -22,11 +24,11 @@ impl fmt::Display for PortStatus {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Clone)]
 pub struct ScanResult {
     pub port: u16,
     pub status: PortStatus,
-    pub response_time_ms: Option<u128>,
+    pub response_time_ms: Option<u64>,
 }
 
 pub fn scan_server(server: &Server) -> Vec<ScanResult> {
@@ -69,7 +71,7 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
         Ok(_) => ScanResult {
             port,
             status: PortStatus::Open,
-            response_time_ms: Some(start_time.elapsed().as_millis()),
+            response_time_ms: Some(start_time.elapsed().as_millis() as u64),
         },
         Err(error) => {
             let status = if error.kind() == std::io::ErrorKind::TimedOut {
@@ -81,7 +83,7 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
             ScanResult {
                 port,
                 status,
-                response_time_ms: Some(start_time.elapsed().as_millis()),
+                response_time_ms: Some(start_time.elapsed().as_millis() as u64),
             }
         }
     }

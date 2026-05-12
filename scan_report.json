@@ -1,0 +1,63 @@
+{
+  "tool": "Embedded Network Monitoring Framework",
+  "servers": [
+    {
+      "name": "Ubuntu VM Test",
+      "address": "192.168.182.129",
+      "protocol": "tcp",
+      "timeout_ms": 1000,
+      "message": null,
+      "results": [
+        {
+          "port": 9000,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 8080,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 22,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 443,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        }
+      ]
+    },
+    {
+      "name": "Local Test Server",
+      "address": "127.0.0.1",
+      "protocol": "tcp",
+      "timeout_ms": 1000,
+      "message": null,
+      "results": [
+        {
+          "port": 8080,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 9000,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 22,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        },
+        {
+          "port": 443,
+          "status": "CLOSED",
+          "response_time_ms": 0
+        }
+      ]
+    }
+  ]
+}

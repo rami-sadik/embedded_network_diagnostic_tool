@@ -18,8 +18,8 @@ pub fn add_server_report(report: &mut String, server: &Server, results: &[ScanRe
     report.push_str(&format!("Protokoll: {}\n", server.protocol));
     report.push_str(&format!("Timeout: {} ms\n\n", server.timeout_ms));
 
-    report.push_str("Port      Status      Zeit\n");
-    report.push_str("------------------------------\n");
+    report.push_str("Port      Status                Zeit\n");
+    report.push_str("----------------------------------------\n");
 
     for result in results {
         let status_text = result.status.to_string();
@@ -30,7 +30,7 @@ pub fn add_server_report(report: &mut String, server: &Server, results: &[ScanRe
         };
 
         report.push_str(&format!(
-            "{:<10}{:<12}{}\n",
+            "{:<10}{:<22}{}\n",
             result.port, status_text, response_time
         ));
     }
@@ -56,13 +56,21 @@ fn add_summary_to_report(report: &mut String, results: &[ScanResult]) {
     let mut open_count = 0;
     let mut closed_count = 0;
     let mut timeout_count = 0;
+    let mut network_unreachable_count = 0;
+    let mut host_unreachable_count = 0;
+    let mut dns_error_count = 0;
+    let mut permission_denied_count = 0;
     let mut error_count = 0;
 
     for result in results {
-        match &result.status {
+        match result.status {
             PortStatus::Open => open_count += 1,
             PortStatus::Closed => closed_count += 1,
             PortStatus::Timeout => timeout_count += 1,
+            PortStatus::NetworkUnreachable => network_unreachable_count += 1,
+            PortStatus::HostUnreachable => host_unreachable_count += 1,
+            PortStatus::DnsError => dns_error_count += 1,
+            PortStatus::PermissionDenied => permission_denied_count += 1,
             PortStatus::Error => error_count += 1,
         }
     }
@@ -71,6 +79,13 @@ fn add_summary_to_report(report: &mut String, results: &[ScanResult]) {
     report.push_str(&format!("OPEN: {}\n", open_count));
     report.push_str(&format!("CLOSED: {}\n", closed_count));
     report.push_str(&format!("TIMEOUT: {}\n", timeout_count));
+    report.push_str(&format!(
+        "NETWORK_UNREACHABLE: {}\n",
+        network_unreachable_count
+    ));
+    report.push_str(&format!("HOST_UNREACHABLE: {}\n", host_unreachable_count));
+    report.push_str(&format!("DNS_ERROR: {}\n", dns_error_count));
+    report.push_str(&format!("PERMISSION_DENIED: {}\n", permission_denied_count));
     report.push_str(&format!("ERROR: {}\n", error_count));
 }
 
@@ -85,13 +100,6 @@ mod tests {
         assert!(report.contains("Embedded Network Monitoring Report"));
         assert!(report.contains("=================================="));
     }
-}
-
-#[cfg(test)]
-mod report_content_tests {
-    use super::{add_server_report, create_report_header};
-    use crate::config::Server;
-    use crate::scanner::{PortStatus, ScanResult};
 
     #[test]
     fn server_report_should_contain_scan_result() {

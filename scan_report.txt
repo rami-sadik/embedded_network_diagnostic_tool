@@ -6,17 +6,21 @@ Adresse: 192.168.182.129
 Protokoll: tcp
 Timeout: 1000 ms
 
-Port      Status      Zeit
-------------------------------
-9000      CLOSED      0 ms
-8080      CLOSED      0 ms
-22        CLOSED      0 ms
-443       CLOSED      0 ms
+Port      Status                Zeit
+----------------------------------------
+9000      CLOSED                0 ms
+8080      CLOSED                0 ms
+22        CLOSED                0 ms
+443       CLOSED                0 ms
 
 Zusammenfassung:
 OPEN: 0
 CLOSED: 4
 TIMEOUT: 0
+NETWORK_UNREACHABLE: 0
+HOST_UNREACHABLE: 0
+DNS_ERROR: 0
+PERMISSION_DENIED: 0
 ERROR: 0
 
 Server: Local Test Server
@@ -24,16 +28,20 @@ Adresse: 127.0.0.1
 Protokoll: tcp
 Timeout: 1000 ms
 
-Port      Status      Zeit
-------------------------------
-8080      CLOSED      0 ms
-9000      CLOSED      0 ms
-22        CLOSED      0 ms
-443       CLOSED      0 ms
+Port      Status                Zeit
+----------------------------------------
+8080      CLOSED                0 ms
+9000      CLOSED                0 ms
+22        CLOSED                0 ms
+443       CLOSED                0 ms
 
 Zusammenfassung:
 OPEN: 0
 CLOSED: 4
 TIMEOUT: 0
+NETWORK_UNREACHABLE: 0
+HOST_UNREACHABLE: 0
+DNS_ERROR: 0
+PERMISSION_DENIED: 0
 ERROR: 0
 

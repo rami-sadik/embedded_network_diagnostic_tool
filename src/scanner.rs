@@ -5,11 +5,29 @@ use std::net::{TcpStream, ToSocketAddrs};
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Serialize, Clone, Copy)]
-#[serde(rename_all = "UPPERCASE")]
 pub enum PortStatus {
+    #[serde(rename = "OPEN")]
     Open,
+
+    #[serde(rename = "CLOSED")]
     Closed,
+
+    #[serde(rename = "TIMEOUT")]
     Timeout,
+
+    #[serde(rename = "NETWORK_UNREACHABLE")]
+    NetworkUnreachable,
+
+    #[serde(rename = "HOST_UNREACHABLE")]
+    HostUnreachable,
+
+    #[serde(rename = "DNS_ERROR")]
+    DnsError,
+
+    #[serde(rename = "PERMISSION_DENIED")]
+    PermissionDenied,
+
+    #[serde(rename = "ERROR")]
     Error,
 }
 
@@ -19,6 +37,10 @@ impl fmt::Display for PortStatus {
             PortStatus::Open => write!(formatter, "OPEN"),
             PortStatus::Closed => write!(formatter, "CLOSED"),
             PortStatus::Timeout => write!(formatter, "TIMEOUT"),
+            PortStatus::NetworkUnreachable => write!(formatter, "NETWORK_UNREACHABLE"),
+            PortStatus::HostUnreachable => write!(formatter, "HOST_UNREACHABLE"),
+            PortStatus::DnsError => write!(formatter, "DNS_ERROR"),
+            PortStatus::PermissionDenied => write!(formatter, "PERMISSION_DENIED"),
             PortStatus::Error => write!(formatter, "ERROR"),
         }
     }
@@ -53,7 +75,7 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
             None => {
                 return ScanResult {
                     port,
-                    status: PortStatus::Error,
+                    status: PortStatus::DnsError,
                     response_time_ms: None,
                 };
             }
@@ -61,7 +83,7 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
         Err(_) => {
             return ScanResult {
                 port,
-                status: PortStatus::Error,
+                status: PortStatus::DnsError,
                 response_time_ms: None,
             };
         }
@@ -74,10 +96,13 @@ fn scan_tcp_port(address: &str, port: u16, timeout_ms: u64) -> ScanResult {
             response_time_ms: Some(start_time.elapsed().as_millis() as u64),
         },
         Err(error) => {
-            let status = if error.kind() == std::io::ErrorKind::TimedOut {
-                PortStatus::Timeout
-            } else {
-                PortStatus::Closed
+            let status = match error.kind() {
+                std::io::ErrorKind::ConnectionRefused => PortStatus::Closed,
+                std::io::ErrorKind::TimedOut => PortStatus::Timeout,
+                std::io::ErrorKind::NetworkUnreachable => PortStatus::NetworkUnreachable,
+                std::io::ErrorKind::HostUnreachable => PortStatus::HostUnreachable,
+                std::io::ErrorKind::PermissionDenied => PortStatus::PermissionDenied,
+                _ => PortStatus::Error,
             };
 
             ScanResult {
@@ -98,6 +123,16 @@ mod tests {
         assert_eq!(PortStatus::Open.to_string(), "OPEN");
         assert_eq!(PortStatus::Closed.to_string(), "CLOSED");
         assert_eq!(PortStatus::Timeout.to_string(), "TIMEOUT");
+        assert_eq!(
+            PortStatus::NetworkUnreachable.to_string(),
+            "NETWORK_UNREACHABLE"
+        );
+        assert_eq!(PortStatus::HostUnreachable.to_string(), "HOST_UNREACHABLE");
+        assert_eq!(PortStatus::DnsError.to_string(), "DNS_ERROR");
+        assert_eq!(
+            PortStatus::PermissionDenied.to_string(),
+            "PERMISSION_DENIED"
+        );
         assert_eq!(PortStatus::Error.to_string(), "ERROR");
     }
 }

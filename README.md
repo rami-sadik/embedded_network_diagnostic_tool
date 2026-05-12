@@ -258,3 +258,53 @@ Zusätzlich zu den bisherigen Rust-Konzepten werden jetzt auch verwendet:
 - sort_by_key()
 - Zeitmessung mit Instant
 
+
+## UDP-Unterstützung
+
+Das Tool unterstützt jetzt neben TCP auch einfache UDP-Portprüfungen.
+
+TCP-Prüfung:
+
+- verwendet TcpStream::connect_timeout
+- OPEN bedeutet: TCP-Verbindung wurde erfolgreich aufgebaut
+- CLOSED bedeutet: Verbindung wurde aktiv abgelehnt
+- TIMEOUT bedeutet: keine Antwort innerhalb des Timeouts
+
+UDP-Prüfung:
+
+- verwendet UdpSocket
+- sendet ein kleines UDP-Testpaket
+- wartet auf eine Antwort
+- OPEN bedeutet: Es wurde eine UDP-Antwort empfangen
+- TIMEOUT bedeutet: Es kam keine Antwort innerhalb des Timeouts
+
+Wichtig:
+
+UDP ist verbindungslos. Deshalb bedeutet TIMEOUT bei UDP nicht automatisch sicher, dass der Port geschlossen ist. Es bedeutet nur, dass keine UDP-Antwort empfangen wurde.
+
+## Beispiel UDP-Konfiguration
+
+{
+  "servers": [
+    {
+      "name": "Local UDP Echo Server",
+      "address": "127.0.0.1",
+      "protocol": "udp",
+      "timeout_ms": 1000,
+      "ports": [9001, 9002]
+    }
+  ]
+}
+
+## UDP-Testserver
+
+Für lokale Tests kann ein kleiner UDP-Echo-Server verwendet werden:
+
+python3 udp_echo_server.py
+
+Der Server lauscht standardmäßig auf:
+
+127.0.0.1:9001
+
+Wenn der UDP-Echo-Server läuft, sollte das Rust-Tool für Port 9001 den Status OPEN anzeigen.
+

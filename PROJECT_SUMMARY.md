@@ -206,3 +206,45 @@ Mögliche nächste Schritte:
 Das Projekt besitzt aktuell einen stabilen Kern und ist für eine erste Vorstellung gut geeignet.
 
 Es zeigt wichtige Rust-Konzepte praktisch anhand eines Netzwerkdiagnose-Tools.
+
+## 13. UDP-Unterstützung
+
+Das Tool wurde um UDP-Unterstützung erweitert.
+
+TCP und UDP werden über das Feld protocol in der config.json ausgewählt.
+
+Beispiel:
+
+protocol: tcp
+
+oder
+
+protocol: udp
+
+Für TCP wird TcpStream::connect_timeout verwendet.
+
+Für UDP wird UdpSocket verwendet. Das Tool sendet ein UDP-Testpaket und wartet auf eine Antwort.
+
+Wichtig ist der Unterschied zwischen TCP und UDP:
+
+TCP ist verbindungsorientiert. Dadurch ist OPEN oder CLOSED relativ klar erkennbar.
+
+UDP ist verbindungslos. Deshalb bedeutet ein UDP-TIMEOUT nicht automatisch sicher, dass der Port geschlossen ist. Es bedeutet nur, dass innerhalb des Timeouts keine Antwort empfangen wurde.
+
+Für lokale Tests wurde ein kleiner UDP-Echo-Server mit Python erstellt:
+
+udp_echo_server.py
+
+Wenn dieser Server auf 127.0.0.1:9001 läuft, erkennt das Rust-Tool den UDP-Port als OPEN.
+
+Neue Rust-Konzepte durch UDP:
+
+- UdpSocket
+- bind()
+- connect()
+- send()
+- recv()
+- set_read_timeout()
+- ErrorKind
+- Unterschied zwischen TCP und UDP in der Implementierung
+

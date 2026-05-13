@@ -35,7 +35,6 @@ pub fn add_server_json_report(
     server: &Server,
     results: Vec<ScanResult>,
     total_duration_ms: u64,
-    ping_result: Option<PingResult>,
 ) {
     let server_report = JsonServerReport {
         name: server.name.clone(),
@@ -45,7 +44,7 @@ pub fn add_server_json_report(
         total_duration_ms: Some(total_duration_ms),
         message: None,
         results,
-        ping: ping_result,
+        ping: None,
     };
 
     report.servers.push(server_report);
@@ -96,7 +95,6 @@ pub fn save_json_report(path: &str, report: &JsonReport) -> Result<(), Box<dyn E
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ping::{PingResult, PingStatus};
     use crate::scanner::{PortStatus, ScanResult};
 
     #[test]
@@ -116,7 +114,7 @@ mod tests {
         }];
 
         let mut report = create_json_report();
-        add_server_json_report(&mut report, &server, results, 7, None);
+        add_server_json_report(&mut report, &server, results, 7);
 
         let json = serde_json::to_string_pretty(&report).unwrap();
 
@@ -126,38 +124,5 @@ mod tests {
         assert!(json.contains("OPEN"));
         assert!(json.contains("total_duration_ms"));
         assert!(json.contains("7"));
-    }
-
-    #[test]
-    fn json_report_should_contain_host_ping_result() {
-        let server = Server {
-            name: String::from("Windows PC"),
-            address: String::from("192.168.178.30"),
-            protocol: String::from("tcp"),
-            timeout_ms: 1000,
-            ports: vec![445],
-        };
-
-        let results = vec![ScanResult {
-            port: 445,
-            status: PortStatus::Timeout,
-            response_time_ms: Some(1000),
-        }];
-
-        let ping_result = PingResult {
-            status: PingStatus::Reachable,
-            response_time_ms: Some(4),
-        };
-
-        let mut report = create_json_report();
-        add_server_json_report(&mut report, &server, results, 1004, Some(ping_result));
-
-        let json = serde_json::to_string_pretty(&report).unwrap();
-
-        assert!(json.contains("Windows PC"));
-        assert!(json.contains("192.168.178.30"));
-        assert!(json.contains("TIMEOUT"));
-        assert!(json.contains("REACHABLE"));
-        assert!(json.contains("response_time_ms"));
     }
 }

@@ -1,4 +1,5 @@
 use crate::config::Server;
+use crate::ping::PingResult;
 use crate::scanner::ScanResult;
 use std::error::Error;
 use std::fs;
@@ -33,6 +34,30 @@ pub fn add_server_csv_report(
             ""
         ));
     }
+}
+
+pub fn add_ping_csv_report(
+    report: &mut String,
+    server: &Server,
+    result: &PingResult,
+    total_duration_ms: u64,
+) {
+    let response_time = match result.response_time_ms {
+        Some(time) => time.to_string(),
+        None => String::new(),
+    };
+
+    report.push_str(&format!(
+        "{},{},{},{},{},{},{},{}\n",
+        escape_csv_value(&server.name),
+        escape_csv_value(&server.address),
+        escape_csv_value(&server.protocol),
+        "",
+        result.status,
+        response_time,
+        total_duration_ms,
+        "Ping host check"
+    ));
 }
 
 pub fn add_unsupported_protocol_csv_report(report: &mut String, server: &Server) {

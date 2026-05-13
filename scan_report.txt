@@ -1,23 +1,22 @@
 Embedded Network Monitoring Report
 ==================================
 
-Server: Local TCP Test Server
-Adresse: 127.0.0.1
+Server: FritzBox Router
+Adresse: 192.168.178.1
 Protokoll: tcp
 Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-22        CLOSED                0 ms
-443       CLOSED                0 ms
-8080      CLOSED                0 ms
-9000      CLOSED                0 ms
+53        OPEN                  2 ms
+80        OPEN                  1 ms
+443       OPEN                  2 ms
 
-Scan-Dauer gesamt: 1 ms
+Scan-Dauer gesamt: 8 ms
 
 Zusammenfassung:
-OPEN: 0
-CLOSED: 4
+OPEN: 3
+CLOSED: 0
 TIMEOUT: 0
 NETWORK_UNREACHABLE: 0
 HOST_UNREACHABLE: 0
@@ -25,22 +24,48 @@ DNS_ERROR: 0
 PERMISSION_DENIED: 0
 ERROR: 0
 
-Server: Local UDP Echo Server
-Adresse: 127.0.0.1
-Protokoll: udp
+Server: Raspberry Pi Monitoring Node
+Adresse: 192.168.178.107
+Protokoll: tcp
 Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-9001      CLOSED                0 ms
-9002      CLOSED                0 ms
+22        OPEN                  0 ms
+80        OPEN                  0 ms
+443       CLOSED                0 ms
+8080      CLOSED                0 ms
 
-Scan-Dauer gesamt: 0 ms
+Scan-Dauer gesamt: 2 ms
+
+Zusammenfassung:
+OPEN: 2
+CLOSED: 2
+TIMEOUT: 0
+NETWORK_UNREACHABLE: 0
+HOST_UNREACHABLE: 0
+DNS_ERROR: 0
+PERMISSION_DENIED: 0
+ERROR: 0
+
+Server: Windows PC
+Adresse: 192.168.178.30
+Protokoll: tcp
+Timeout: 1000 ms
+
+Port      Status                Zeit
+----------------------------------------
+135       TIMEOUT               1000 ms
+139       TIMEOUT               1000 ms
+445       TIMEOUT               1000 ms
+3389      TIMEOUT               1001 ms
+
+Scan-Dauer gesamt: 1007 ms
 
 Zusammenfassung:
 OPEN: 0
-CLOSED: 2
-TIMEOUT: 0
+CLOSED: 0
+TIMEOUT: 4
 NETWORK_UNREACHABLE: 0
 HOST_UNREACHABLE: 0
 DNS_ERROR: 0

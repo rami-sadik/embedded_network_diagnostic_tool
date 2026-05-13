@@ -1,4 +1,5 @@
 use crate::config::Server;
+use crate::ping::PingResult;
 use crate::scanner::{PortStatus, ScanResult};
 use std::error::Error;
 use std::fs;
@@ -45,6 +46,35 @@ pub fn add_server_report(
     add_summary_to_report(report, results);
 
     report.push('\n');
+}
+
+pub fn add_ping_report(
+    report: &mut String,
+    server: &Server,
+    result: &PingResult,
+    total_duration_ms: u64,
+) {
+    report.push_str(&format!("Server: {}\n", server.name));
+    report.push_str(&format!("Adresse: {}\n", server.address));
+    report.push_str(&format!("Protokoll: {}\n", server.protocol));
+    report.push_str(&format!("Timeout: {} ms\n\n", server.timeout_ms));
+
+    let response_time = match result.response_time_ms {
+        Some(time) => format!("{} ms", time),
+        None => String::from("-"),
+    };
+
+    report.push_str("Ziel              Status                Zeit\n");
+    report.push_str("------------------------------------------------\n");
+    report.push_str(&format!(
+        "{:<18}{:<22}{}\n",
+        server.address, result.status, response_time
+    ));
+
+    report.push_str(&format!(
+        "\nScan-Dauer gesamt: {} ms\n\n",
+        total_duration_ms
+    ));
 }
 
 pub fn add_unsupported_protocol_report(report: &mut String, server: &Server) {

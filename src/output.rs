@@ -1,4 +1,5 @@
 use crate::config::Server;
+use crate::ping::{PingResult, PingStatus};
 use crate::scanner::{PortStatus, ScanResult};
 
 const RESET: &str = "\x1b[0m";
@@ -39,6 +40,27 @@ pub fn print_server_dashboard(server: &Server, results: &[ScanResult], total_dur
     println!();
 }
 
+pub fn print_ping_dashboard(server: &Server, result: &PingResult, total_duration_ms: u64) {
+    print_server_info(server);
+
+    println!("{:<18}{:<22}Zeit", "Ziel", "Status");
+    println!("------------------------------------------------");
+
+    let status_text = result.status.to_string();
+    let status_column = format!("{:<22}", status_text);
+    let colored_status = color_ping_status(&result.status, &status_column);
+
+    let response_time = match result.response_time_ms {
+        Some(time) => format!("{} ms", time),
+        None => String::from("-"),
+    };
+
+    println!("{:<18}{}{}", server.address, colored_status, response_time);
+
+    println!("\nScan-Dauer gesamt: {} ms", total_duration_ms);
+    println!();
+}
+
 pub fn print_unsupported_protocol(server: &Server) {
     print_server_info(server);
 
@@ -46,7 +68,7 @@ pub fn print_unsupported_protocol(server: &Server) {
         "Protokoll '{}' wird aktuell nicht unterstützt.",
         server.protocol
     );
-    println!("Aktuell implementiert: tcp\n");
+    println!("Aktuell implementiert: tcp, udp, icmp\n");
 }
 
 fn print_server_info(server: &Server) {
@@ -109,5 +131,13 @@ fn color_status(status: &PortStatus, text: &str) -> String {
         PortStatus::DnsError => format!("{}{}{}", MAGENTA, text, RESET),
         PortStatus::PermissionDenied => format!("{}{}{}", MAGENTA, text, RESET),
         PortStatus::Error => format!("{}{}{}", MAGENTA, text, RESET),
+    }
+}
+
+fn color_ping_status(status: &PingStatus, text: &str) -> String {
+    match status {
+        PingStatus::Reachable => format!("{}{}{}", GREEN, text, RESET),
+        PingStatus::Timeout => format!("{}{}{}", YELLOW, text, RESET),
+        PingStatus::Error => format!("{}{}{}", MAGENTA, text, RESET),
     }
 }

@@ -68,10 +68,7 @@ fn main() {
         match server.protocol.as_str() {
             "tcp" => {
                 let scan_start = Instant::now();
-
-                let host_ping = ping_host(&server.address, server.timeout_ms);
                 let results = scan_tcp_server(server);
-
                 let total_duration_ms = scan_start.elapsed().as_millis() as u64;
 
                 print_server_dashboard(server, &results, total_duration_ms);
@@ -88,17 +85,13 @@ fn main() {
                     server,
                     results.clone(),
                     total_duration_ms,
-                    Some(host_ping),
                 );
 
                 add_server_csv_report(&mut csv_report_content, server, &results, total_duration_ms);
             }
             "udp" => {
                 let scan_start = Instant::now();
-
-                let host_ping = ping_host(&server.address, server.timeout_ms);
                 let results = scan_udp_server(server);
-
                 let total_duration_ms = scan_start.elapsed().as_millis() as u64;
 
                 print_server_dashboard(server, &results, total_duration_ms);
@@ -115,16 +108,13 @@ fn main() {
                     server,
                     results.clone(),
                     total_duration_ms,
-                    Some(host_ping),
                 );
 
                 add_server_csv_report(&mut csv_report_content, server, &results, total_duration_ms);
             }
             "icmp" | "ping" => {
                 let scan_start = Instant::now();
-
                 let result = ping_host(&server.address, server.timeout_ms);
-
                 let total_duration_ms = scan_start.elapsed().as_millis() as u64;
 
                 print_ping_dashboard(server, &result, total_duration_ms);

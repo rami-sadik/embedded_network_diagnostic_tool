@@ -2,3 +2,11 @@
 Cargo.lock.bak
 *.tmp
 *.log
+
+# Generated scan reports
+scan_report.txt
+scan_report.json
+scan_report.csv
+
+# Local dashboard/runtime data
+results.json

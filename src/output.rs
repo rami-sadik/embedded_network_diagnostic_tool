@@ -10,7 +10,7 @@ const MAGENTA: &str = "\x1b[35m";
 const CYAN: &str = "\x1b[36m";
 
 pub fn print_header() {
-    println!("Embedded Network Monitoring Framework");
+    println!("Embedded Network Diagnostic Tool");
     println!("====================================\n");
 }
 

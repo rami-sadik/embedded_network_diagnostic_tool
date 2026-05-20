@@ -25,7 +25,7 @@ struct JsonServerReport {
 
 pub fn create_json_report() -> JsonReport {
     JsonReport {
-        tool: String::from("Embedded Network Monitoring Framework"),
+        tool: String::from("Embedded Network Diagnostic Tool"),
         servers: Vec::new(),
     }
 }

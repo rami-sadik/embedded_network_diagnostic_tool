@@ -8,11 +8,11 @@ Timeout: 1000 ms
 
 Port      Status                Zeit
 ----------------------------------------
-53        OPEN                  2 ms
-80        OPEN                  1 ms
-443       OPEN                  2 ms
+53        OPEN                  1 ms
+80        OPEN                  2 ms
+443       OPEN                  1 ms
 
-Scan-Dauer gesamt: 8 ms
+Scan-Dauer gesamt: 7 ms
 
 Zusammenfassung:
 OPEN: 3
@@ -36,7 +36,7 @@ Port      Status                Zeit
 443       CLOSED                0 ms
 8080      CLOSED                0 ms
 
-Scan-Dauer gesamt: 2 ms
+Scan-Dauer gesamt: 4 ms
 
 Zusammenfassung:
 OPEN: 2
@@ -58,9 +58,9 @@ Port      Status                Zeit
 135       TIMEOUT               1000 ms
 139       TIMEOUT               1000 ms
 445       TIMEOUT               1000 ms
-3389      TIMEOUT               1001 ms
+3389      TIMEOUT               1000 ms
 
-Scan-Dauer gesamt: 1007 ms
+Scan-Dauer gesamt: 1008 ms
 
 Zusammenfassung:
 OPEN: 0

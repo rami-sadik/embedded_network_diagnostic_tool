@@ -1,35 +1,41 @@
-# Project Summary: Embedded Network Monitoring Framework in Rust
+# Project Summary: Embedded Network Diagnostic Tool
 
-## 1. Projektziel
+## 1. Project Goal
 
-Das Ziel des Projekts ist die Entwicklung eines kleinen Netzwerkdiagnose-Tools in Rust.
+The goal of this project is to develop a small network diagnostic tool in Rust.
 
-Das Tool liest Server, IP-Adressen, Ports und Timeout-Werte aus einer JSON-Konfigurationsdatei ein. Danach prüft es, ob die angegebenen TCP-Ports erreichbar sind, misst die Antwortzeit und erzeugt eine strukturierte Ausgabe.
+The tool reads hosts, IP addresses, protocols, ports and timeout values from a JSON configuration file. It then checks the configured network targets, measures response times, classifies the results and generates structured reports.
 
-Das Projekt ist nicht als Hacking-Tool gedacht, sondern als legitimes Diagnosewerkzeug für Embedded Systems, TCP/IP-Grundlagen und Netzwerküberwachung.
+The project is intended as a legitimate diagnostic tool for Embedded Systems, Embedded Linux, TCP/IP basics and Rust system programming. It is not intended for unauthorized scanning or offensive security use.
 
-## 2. Aktuelle Funktionen
+## 2. Current Features
 
-Das Projekt unterstützt aktuell:
+The project currently supports:
 
-- Einlesen einer config.json
-- mehrere Server
-- mehrere TCP-Ports pro Server
-- konfigurierbarer Timeout pro Server
-- TCP-Verbindungsprüfung
-- Antwortzeitmessung pro Port
-- Gesamt-Scan-Dauer pro Server
-- parallele TCP-Port-Scans
-- farbige Terminalausgabe
-- TXT-Report: scan_report.txt
-- JSON-Report: scan_report.json
-- bessere Fehlerklassifikation
-- Unit-Tests mit cargo test
-- Git-Versionierung
+- JSON-based configuration
+- multiple hosts
+- multiple ports per host
+- configurable timeout per host
+- TCP port diagnostics
+- UDP support for selected test scenarios
+- host reachability / ping result
+- response time measurement in milliseconds
+- total scan duration per host
+- structured terminal output
+- TXT report generation
+- JSON report generation
+- CSV report generation
+- improved result classification
+- command-line argument for custom config files
+- unit tests with cargo test
+- code checks with cargo fmt and cargo clippy
+- Raspberry Pi deployment
+- systemd timer automation
+- simple web dashboard integration
 
-## 3. Unterstützte Statuswerte
+## 3. Result Classification
 
-Das Tool unterscheidet aktuell folgende Statuswerte:
+The tool distinguishes between the following result states:
 
 - OPEN
 - CLOSED
@@ -40,40 +46,34 @@ Das Tool unterscheidet aktuell folgende Statuswerte:
 - PERMISSION_DENIED
 - ERROR
 
-Dadurch ist die Diagnose genauer als bei einem einfachen Offen/Geschlossen-Test.
+## 4. Project Structure
 
-## 4. Projektstruktur
+Important files and modules:
 
-src/main.rs
+- Cargo.toml: Rust project configuration
+- README.md: GitHub documentation
+- PROJECT_SUMMARY.md: project summary
+- config.json: default configuration
+- config.local-test.json: local test configuration
+- run_scan_dashboard.sh: helper script for dashboard updates
+- udp_echo_server.py: small UDP test helper
+- examples/: example configuration and example reports
 
-Steuert den gesamten Programmablauf:
-Konfiguration laden, Server durchgehen, Scan starten, Ergebnisse ausgeben und Reports speichern.
+Rust source modules:
 
-src/config.rs
+- src/main.rs: controls the main program flow
+- src/cli.rs: parses command-line arguments
+- src/config.rs: loads and represents the JSON configuration
+- src/scanner.rs: contains TCP/UDP scan logic and result types
+- src/ping.rs: checks host reachability
+- src/output.rs: creates terminal output
+- src/report.rs: creates the TXT report
+- src/json_report.rs: creates the JSON report
+- src/csv_report.rs: creates the CSV report
 
-Lädt die JSON-Konfiguration und definiert die Strukturen Config und Server.
+## 5. Rust Concepts Used
 
-src/scanner.rs
-
-Enthält die eigentliche TCP-Scanlogik.
-Hier werden PortStatus und ScanResult definiert.
-Außerdem werden die Ports parallel mit Threads geprüft.
-
-src/output.rs
-
-Erzeugt die farbige Terminalausgabe mit Tabelle, Status, Antwortzeit, Gesamtzeit und Zusammenfassung.
-
-src/report.rs
-
-Erzeugt den menschenlesbaren Textreport scan_report.txt.
-
-src/json_report.rs
-
-Erzeugt den maschinenlesbaren JSON-Report scan_report.json.
-
-## 5. Wichtige Rust-Konzepte
-
-In diesem Projekt werden viele wichtige Rust-Konzepte praktisch verwendet:
+This project demonstrates several important Rust concepts:
 
 - struct
 - enum
@@ -82,236 +82,137 @@ In diesem Projekt werden viele wichtige Rust-Konzepte praktisch verwendet:
 - Result
 - Option
 - match
-- mod
-- use
-- pub
-- Referenzen mit &
-- veränderbare Referenzen mit &mut
-- Fehlerbehandlung mit ?
+- modules with mod
+- public functions with pub
+- references and borrowing
+- error handling with ?
 - impl Display
-- Datei-I/O mit fs::read_to_string und fs::write
-- JSON-Verarbeitung mit serde und serde_json
-- Serialize und Deserialize
-- Threads mit std::thread
-- thread::spawn
-- move-Closure
-- JoinHandle
-- join()
-- clone()
-- sort_by_key()
-- Zeitmessung mit Instant
-- Unit-Tests mit #[test]
+- file I/O
+- JSON parsing with serde
+- JSON serialization with serde_json
+- time measurement with Instant
+- threads with std::thread
+- unit tests with #[test]
+- Cargo workflow with fmt, clippy and test
 
-## 6. Warum Rust?
+## 6. Why Rust?
 
-Rust ist für dieses Projekt passend, weil es moderne Systemprogrammierung ermöglicht.
+Rust is suitable for this project because it supports modern systems programming with strong safety guarantees.
 
-Wichtige Vorteile gegenüber C:
+Important advantages compared with C:
 
-- stärkere Typsicherheit
-- sichere Fehlerbehandlung mit Result und Option
-- keine klassischen Null-Pointer-Probleme
-- kontrollierter Umgang mit Speicher durch Ownership und Borrowing
-- gute Toolchain mit cargo fmt, cargo clippy und cargo test
-- geeignet für Systemprogrammierung und Embedded-nahe Anwendungen
+- stronger type safety
+- structured error handling with Result and Option
+- no classic null pointer problems
+- memory safety through ownership and borrowing
+- modern tooling with cargo fmt, cargo clippy and cargo test
+- good fit for Embedded Linux and system-level tools
 
-## 7. Demo-Befehle
+## 7. Raspberry Pi Deployment
 
-Code formatieren:
+The tool was deployed on a Raspberry Pi running Ubuntu Server.
 
-cargo fmt
+Runtime directory:
 
-Code prüfen:
+/opt/home-network-monitor
 
-cargo clippy
+Typical runtime files:
 
-Tests ausführen:
+- embedded_network_diagnostic_tool
+- config.json
+- discover_and_scan.sh
+- scan_report.txt
+- scan_report.json
+- scan_report.csv
 
-cargo test
+A systemd timer runs the diagnostic script automatically every few minutes and updates the dashboard data.
 
-Programm starten:
+Useful systemd commands:
 
-cargo run
+- systemctl status home-network-monitor.timer --no-pager
+- systemctl status home-network-monitor.service --no-pager
+- journalctl -u home-network-monitor.service -n 50 --no-pager
 
-Textreport anzeigen:
+## 8. Web Dashboard
 
-cat scan_report.txt
+A simple dashboard is served with nginx from:
 
-JSON-Report anzeigen:
+/var/www/html/net-dashboard
 
-cat scan_report.json
+The dashboard contains:
 
-Git-Status prüfen:
+- index.html
+- style.css
+- app.js
+- results.json
 
-git status
+The dashboard reads results.json and displays the latest scan results in the browser.
 
-## 8. Beispiel-Demo
+## 9. Testing
 
-Ein Testserver kann lokal gestartet werden mit:
+The project contains unit tests for:
 
-python3 -m http.server 8080 --bind 127.0.0.1
+- command-line argument parsing
+- scan status formatting
+- ping status formatting
+- timeout conversion
+- TXT report generation
+- JSON report generation
+- CSV report generation
 
-Danach sollte das Rust-Tool bei 127.0.0.1 Port 8080 den Status OPEN anzeigen.
+Quality checks:
 
-Wenn der Python-Server mit Strg + C beendet wird, sollte das Tool bei Port 8080 wieder CLOSED anzeigen.
+- cargo fmt --check
+- cargo clippy
+- cargo test
 
-Damit kann gezeigt werden, dass das Tool echte Netzwerkzustände prüft und nicht nur feste Werte ausgibt.
+At the current stage, all tests pass successfully.
 
-## 9. Parallele Scans
+## 10. Embedded Systems Relevance
 
-Die Ports eines Servers werden parallel geprüft.
+The project is relevant for Embedded Systems because many embedded Linux devices, gateways, Raspberry Pi systems and industrial controllers need simple diagnostic tools to verify network availability.
 
-Ohne Parallelisierung:
+Typical use cases:
 
-Wenn 4 Ports jeweils 1000 ms Timeout haben, dauert der Scan ungefähr 4000 ms.
+- checking whether an embedded device is reachable
+- verifying whether SSH, HTTP or other services are available
+- measuring response times in a local lab network
+- generating reports for debugging and documentation
+- displaying device status on a lightweight dashboard
 
-Mit Parallelisierung:
+## 11. Safety and Scope
 
-Die 4 Ports werden gleichzeitig geprüft. Die Gesamtdauer liegt dann ungefähr bei 1000 ms.
+The tool must only be used in networks where the user has permission to perform diagnostics.
 
-Dadurch ist das Tool bei mehreren Timeout-Fällen deutlich schneller.
+Allowed and intended use cases:
 
-## 10. Was ich bisher gelernt habe
+- private home network
+- university lab network with permission
+- own Raspberry Pi
+- own embedded devices
+- local test environment
 
-Durch das Projekt habe ich gelernt:
+Not intended:
 
-- wie man ein Rust-Projekt modular aufbaut
-- wie man JSON-Dateien einliest
-- wie man eigene Datentypen mit struct und enum definiert
-- wie man Fehler mit Result, Option und match behandelt
-- wie man TCP-Verbindungen mit Timeout prüft
-- wie man Messzeiten mit Instant erfasst
-- wie man Reports als TXT und JSON erzeugt
-- wie man Tests mit cargo test schreibt
-- wie man Code mit cargo fmt und cargo clippy prüft
-- wie man Git für Versionierung verwendet
-- wie man einfache parallele Verarbeitung mit Threads umsetzt
+- unauthorized public IP scanning
+- attacking systems
+- bypassing security mechanisms
+- offensive security operations
 
-## 11. Nächste mögliche Erweiterungen
+## 12. Current Project Status
 
-Mögliche nächste Schritte:
+The project has a stable Rust core, working Raspberry Pi deployment, generated TXT/JSON/CSV reports, unit tests and a simple web dashboard integration.
 
-- UDP-Unterstützung
-- Ping/ICMP-Prüfung
-- Web-Dashboard
-- Logging-System
-- Konfigurierbare Ausgabeformate
-- Export als CSV
-- bessere Kommandozeilenargumente
-- Integration in Embedded-Testumgebungen
-- Vergleich zwischen sequentiellem und parallelem Scanmodus
+It is suitable as a small 2 ECTS Rust project and as a portfolio project for Embedded Systems, Linux and network diagnostics.
 
-## 12. Aktueller Projektstatus
+## 13. Possible Future Extensions
 
-Das Projekt besitzt aktuell einen stabilen Kern und ist für eine erste Vorstellung gut geeignet.
+Possible future extensions:
 
-Es zeigt wichtige Rust-Konzepte praktisch anhand eines Netzwerkdiagnose-Tools.
-
-## 13. UDP-Unterstützung
-
-Das Tool wurde um UDP-Unterstützung erweitert.
-
-TCP und UDP werden über das Feld protocol in der config.json ausgewählt.
-
-Beispiel:
-
-protocol: tcp
-
-oder
-
-protocol: udp
-
-Für TCP wird TcpStream::connect_timeout verwendet.
-
-Für UDP wird UdpSocket verwendet. Das Tool sendet ein UDP-Testpaket und wartet auf eine Antwort.
-
-Wichtig ist der Unterschied zwischen TCP und UDP:
-
-TCP ist verbindungsorientiert. Dadurch ist OPEN oder CLOSED relativ klar erkennbar.
-
-UDP ist verbindungslos. Deshalb bedeutet ein UDP-TIMEOUT nicht automatisch sicher, dass der Port geschlossen ist. Es bedeutet nur, dass innerhalb des Timeouts keine Antwort empfangen wurde.
-
-Für lokale Tests wurde ein kleiner UDP-Echo-Server mit Python erstellt:
-
-udp_echo_server.py
-
-Wenn dieser Server auf 127.0.0.1:9001 läuft, erkennt das Rust-Tool den UDP-Port als OPEN.
-
-Neue Rust-Konzepte durch UDP:
-
-- UdpSocket
-- bind()
-- connect()
-- send()
-- recv()
-- set_read_timeout()
-- ErrorKind
-- Unterschied zwischen TCP und UDP in der Implementierung
-
-
-## 14. CSV-Export
-
-Das Tool erzeugt jetzt zusätzlich einen CSV-Report:
-
-scan_report.csv
-
-Damit können die Ergebnisse in Tabellenprogrammen wie Excel oder LibreOffice Calc ausgewertet werden.
-
-Der CSV-Report enthält pro Port eine Zeile mit:
-
-- Servername
-- Adresse
-- Protokoll
-- Port
-- Status
-- Antwortzeit
-- Gesamt-Scan-Dauer
-- optionale Nachricht
-
-Dadurch gibt es jetzt drei Ausgabeformate:
-
-- TXT für Menschen
-- JSON für Programme oder Web-Dashboards
-- CSV für Tabellen und Auswertung
-
-## 15. Kommandozeilenargumente
-
-Das Tool unterstützt jetzt einfache Kommandozeilenargumente.
-
-Standardmäßig wird config.json geladen:
-
-cargo run
-
-Mit --config kann eine andere Konfigurationsdatei angegeben werden:
-
-cargo run -- --config config.json
-
-oder:
-
-cargo run -- --config test_config.json
-
-Mit --help kann eine Hilfe angezeigt werden:
-
-cargo run -- --help
-
-Wichtig:
-
-Bei cargo run trennt das erste -- die Cargo-Argumente von den Programmargumenten.
-
-Beispiel:
-
-cargo run -- --config config.json
-
-Das bedeutet:
-
-Cargo startet das Programm.  
-Das eigene Rust-Programm bekommt --config config.json als Argumente.
-
-Neue Rust-Konzepte durch CLI:
-
-- std::env::args
-- enum CliAction
-- Argument-Parsing
-- Result für fehlerhafte Argumente
-- Unit-Tests für CLI-Parsing
-
+- STM32 integration for hardware status LEDs
+- serial communication between Raspberry Pi and STM32
+- more detailed dashboard visualization
+- configurable scan intervals
+- better device naming
+- historical result storage
+- packaging as a complete Linux service

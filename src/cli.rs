@@ -36,7 +36,7 @@ pub fn parse_args_from(args: &[String]) -> Result<CliAction, String> {
 }
 
 pub fn print_help() {
-    println!("Embedded Network Monitoring Framework");
+    println!("Embedded Network Diagnostic Tool");
     println!();
     println!("Verwendung:");
     println!("  cargo run");

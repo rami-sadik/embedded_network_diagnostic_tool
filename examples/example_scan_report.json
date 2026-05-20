@@ -2,8 +2,8 @@
   "tool": "Embedded Network Monitoring Framework",
   "servers": [
     {
-      "name": "FritzBox Router",
-      "address": "192.168.178.1",
+      "name": "Lab Gateway",
+      "address": "192.0.2.1",
       "protocol": "tcp",
       "timeout_ms": 1000,
       "total_duration_ms": 7,
@@ -31,8 +31,8 @@
       }
     },
     {
-      "name": "Raspberry Pi Monitoring Node",
-      "address": "192.168.178.107",
+      "name": "Raspberry Pi Test Node",
+      "address": "192.0.2.10",
       "protocol": "tcp",
       "timeout_ms": 1000,
       "total_duration_ms": 4,
@@ -65,8 +65,8 @@
       }
     },
     {
-      "name": "Windows PC",
-      "address": "192.168.178.30",
+      "name": "Test Workstation",
+      "address": "192.0.2.30",
       "protocol": "tcp",
       "timeout_ms": 1000,
       "total_duration_ms": 1008,

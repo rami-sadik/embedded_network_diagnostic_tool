@@ -1,8 +1,8 @@
 Embedded Network Monitoring Report
 ==================================
 
-Server: FritzBox Router
-Adresse: 192.168.178.1
+Server: Lab Gateway
+Adresse: 192.0.2.1
 Protokoll: tcp
 Timeout: 1000 ms
 
@@ -24,8 +24,8 @@ DNS_ERROR: 0
 PERMISSION_DENIED: 0
 ERROR: 0
 
-Server: Raspberry Pi Monitoring Node
-Adresse: 192.168.178.107
+Server: Raspberry Pi Test Node
+Adresse: 192.0.2.10
 Protokoll: tcp
 Timeout: 1000 ms
 
@@ -48,8 +48,8 @@ DNS_ERROR: 0
 PERMISSION_DENIED: 0
 ERROR: 0
 
-Server: Windows PC
-Adresse: 192.168.178.30
+Server: Test Workstation
+Adresse: 192.0.2.30
 Protokoll: tcp
 Timeout: 1000 ms
 

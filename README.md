@@ -283,3 +283,29 @@ It is suitable as a small 2 ECTS Rust project and as a portfolio project for Emb
 - Better device naming
 - Export of historical scan results
 - Packaging as a system service
+
+## Screenshots
+
+### Terminal Output
+
+The terminal output shows the diagnostic result table, port status classification, response times and generated report files.
+
+![Terminal Output](docs/screenshots/terminal-output.png)
+
+### Web Dashboard Overview
+
+The web dashboard displays the latest generated JSON results in a browser-based overview.
+
+![Dashboard Overview](docs/screenshots/dashboard-01.png)
+
+### Dashboard Host Details
+
+The dashboard can show detailed diagnostic information for discovered hosts and checked services.
+
+![Dashboard Host Details](docs/screenshots/dashboard-02.png)
+
+### Dashboard Status View
+
+The dashboard provides a visual overview of network status, response times and service availability.
+
+![Dashboard Status View](docs/screenshots/dashboard-03.png)
